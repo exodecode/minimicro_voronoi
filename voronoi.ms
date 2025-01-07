@@ -1,7 +1,7 @@
 globals.WIDTH = 960
 globals.HEIGHT = 640
 globals.cellResolution = 4
-globals.textureResolution = 64
+globals.textureResolution = 128
 
 voronoi = function(cellResolution, textureResolution)
 	rndColor = function
@@ -35,13 +35,12 @@ voronoi = function(cellResolution, textureResolution)
 		end for
 	end for
 
-	pixels = []
+	pixelSize = floor(HEIGHT / textureResolution)
+	textureResolutionEnd = textureResolution - 1
+	xOffset = floor((WIDTH - (pixelSize * textureResolution)) / 2)
 	pixelSize = floor(HEIGHT / textureResolution)
 
-	textureResolutionEnd = textureResolution - 1
-
 	for y in range(0, textureResolutionEnd)
-		pixels.push []
 		y1 = y * pixelSize
 		for x in range(0, textureResolutionEnd)
 			minDist = -1
@@ -64,29 +63,12 @@ voronoi = function(cellResolution, textureResolution)
 					end if
 				end for
 			end for
+
+
 			col = colors[minIndexJ][minIndexI]
-			pixels[y].push col
-		end for
-	end for
-	return pixels
-end function
-
-main = function(cellResolution, textureResolution)
-	clear
-	disp = display(4)
-	gfx.clear color.clear
-	pixels = voronoi(cellResolution, textureResolution)
-
-	textureResolutionEnd = textureResolution - 1
-	pixelSize = floor(HEIGHT / textureResolution)
-
-	xOffset = floor((WIDTH - (pixelSize * textureResolution)) / 2)
-
-	for y in range(0, textureResolutionEnd)
-		for x in range(0, textureResolutionEnd)
 			x1 = x * pixelSize + xOffset
 			y1 = y * pixelSize
-			col = pixels[y][x]
+
 			gfx.fillRect(
 				x1,
 				y1,
@@ -95,6 +77,13 @@ main = function(cellResolution, textureResolution)
 				col)
 		end for
 	end for
+end function
+
+main = function(cellResolution, textureResolution)
+	clear
+	disp = display(4)
+	gfx.clear color.clear
+	voronoi cellResolution, textureResolution
 end function
 
 main cellResolution, textureResolution
